@@ -1,7 +1,5 @@
 package graphic;
 
-import java.util.ArrayList;
-
 import graphic.map.Room;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -62,7 +60,7 @@ public class GraphicWindow {
 		HBox top = new HBox();
 		VBox.setVgrow(top, Priority.NEVER);
 		top.setMaxHeight(100);
-		
+
 		AttemptsLabel = new Label(Integer.toString(Simulation.getAttemptsNumber()));
 		top.setAlignment(Pos.CENTER);
 		top.setSpacing(30);
@@ -146,13 +144,11 @@ public class GraphicWindow {
 	}
 
 	private void setRooms(AnchorPane mapPane) {
-		for (ArrayList<Room> roomLine : Simulation.getMap().getRooms()) {
-			for (Room room : roomLine) {
-				AnchorPane graphic = room.graphicItem();
-				AnchorPane.setTopAnchor(graphic, room.getYPos() * Room.getSize() * scale);
-				AnchorPane.setLeftAnchor(graphic, room.getXPos() * Room.getSize() * scale);
-				mapPane.getChildren().add(graphic);
-			}
+		for (Room room : Simulation.getMap().getRooms().values()) {
+			AnchorPane graphic = room.graphicItem();
+			AnchorPane.setTopAnchor(graphic, room.getYPos() * Room.getSize() * scale);
+			AnchorPane.setLeftAnchor(graphic, room.getXPos() * Room.getSize() * scale);
+			mapPane.getChildren().add(graphic);
 		}
 	}
 

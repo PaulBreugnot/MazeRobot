@@ -68,6 +68,22 @@ public class Room {
 		return leftDoor;
 	}
 	
+	public void setTopDoor(boolean topDoor) {
+		this.topDoor = topDoor;
+	}
+	
+	public void setBottomDoor(boolean bottomDoor) {
+		this.bottomDoor = bottomDoor;
+	}
+	
+	public void setLeftDoor(boolean leftDoor) {
+		this.leftDoor = leftDoor;
+	}
+	
+	public void setRightDoor(boolean rightDoor) {
+		this.rightDoor = rightDoor;
+	}
+	
 	public AnchorPane graphicItem() {
 		AnchorPane roomPane = new AnchorPane();
 		Rectangle rectangle = new Rectangle(0, 0, RoomSize * GraphicWindow.getScale(),

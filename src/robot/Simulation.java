@@ -2,6 +2,7 @@ package robot;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import graphic.GraphicWindow;
 import graphic.map.Map;
@@ -14,6 +15,8 @@ import qLearning.model.StateActionPair;
 import qLearning.problem.MazeRobotReward;
 import qLearning.problem.MazeRobotState;
 import robot.model.Robot;
+import util.Copy;
+import util.Random;
 
 public class Simulation extends Application {
 
@@ -31,36 +34,33 @@ public class Simulation extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
-		ArrayList<ArrayList<Room>> rooms = new ArrayList<>();
+		/*ArrayList<Room> rooms = new ArrayList<>();
 		
-		ArrayList<Room> firstLine = new ArrayList<>();
-		firstLine.add(new Room(true, false, false, true, Room.RoomType.TRAP, 0, 0));
-		firstLine.add(new Room(true, false, true, true, Room.RoomType.TRAP, 1, 0));
-		firstLine.add(new Room(true, false, true, true, Room.RoomType.TRAP, 2, 0));
-		firstLine.add(new Room(true, false, true, true, Room.RoomType.TRAP, 3, 0));
-		firstLine.add(new Room(true, false, true, false, Room.RoomType.OBJECTIVE, 4, 0));
-		rooms.add(firstLine);
+		rooms.add(new Room(true, false, false, true, Room.RoomType.TRAP, 0, 0));
+		rooms.add(new Room(true, false, true, true, Room.RoomType.TRAP, 1, 0));
+		rooms.add(new Room(true, false, true, true, Room.RoomType.TRAP, 2, 0));
+		rooms.add(new Room(true, false, true, true, Room.RoomType.TRAP, 3, 0));
+		rooms.add(new Room(true, false, true, false, Room.RoomType.OBJECTIVE, 4, 0));
 		
-		ArrayList<Room> secondLine = new ArrayList<>();
-		secondLine.add(new Room(true, true, false, true, Room.RoomType.NEUTRAL, 0, 1));
-		secondLine.add(new Room(true, true, true, true, Room.RoomType.NEUTRAL, 1, 1));
-		secondLine.add(new Room(true, true, true, true, Room.RoomType.NEUTRAL, 2, 1));
-		secondLine.add(new Room(true, true, true, true, Room.RoomType.NEUTRAL, 3, 1));
-		secondLine.add(new Room(true, true, true, false, Room.RoomType.NEUTRAL, 4, 1));
-		rooms.add(secondLine);
+		rooms.add(new Room(true, true, false, true, Room.RoomType.NEUTRAL, 0, 1));
+		rooms.add(new Room(true, true, true, true, Room.RoomType.NEUTRAL, 1, 1));
+		rooms.add(new Room(true, true, true, true, Room.RoomType.NEUTRAL, 2, 1));
+		rooms.add(new Room(true, true, true, true, Room.RoomType.NEUTRAL, 3, 1));
+		rooms.add(new Room(true, true, true, false, Room.RoomType.NEUTRAL, 4, 1));
 		
-		ArrayList<Room> thirdLine = new ArrayList<>();
-		thirdLine.add(new Room(false, true, false, true, Room.RoomType.TRAP, 0, 2));
-		thirdLine.add(new Room(false, true, true, true, Room.RoomType.TRAP, 1, 2));
-		thirdLine.add(new Room(false, true, true, true, Room.RoomType.TRAP, 2, 2));
-		thirdLine.add(new Room(false, true, true, true, Room.RoomType.TRAP, 3, 2));
-		thirdLine.add(new Room(false, true, true, false, Room.RoomType.TRAP, 4, 2));
-		rooms.add(thirdLine);
+		rooms.add(new Room(false, true, false, true, Room.RoomType.TRAP, 0, 2));
+		rooms.add(new Room(false, true, true, true, Room.RoomType.TRAP, 1, 2));
+		rooms.add(new Room(false, true, true, true, Room.RoomType.TRAP, 2, 2));
+		rooms.add(new Room(false, true, true, true, Room.RoomType.TRAP, 3, 2));
+		rooms.add(new Room(false, true, true, false, Room.RoomType.TRAP, 4, 2));*/
 
-		setMap(new Map(firstLine.size(), rooms.size()));
-		map.setRooms(rooms);
-		robot = new Robot(2, 1, 0.2);
-		initState = new MazeRobotState(rooms.get(robot.getYPos()).get(robot.getXPos()));
+		setMap(new Map(10, 10));
+		//map.addRooms(rooms);
+		Room initRoom = new Room(true, true, true, true, Room.RoomType.OBJECTIVE, 2, 2);
+		map.addRoom(initRoom);
+		map.randomlyGenerateMaze(initRoom);
+		robot = randomlyInitializedRobot();
+		initState = new MazeRobotState(map.getRoom(robot.getXPos(), robot.getYPos()));
 		graphicWindow = new GraphicWindow(stage, this);
 		
 		qLearningAgent = new QLearningAgent(initState, null, null);
@@ -84,12 +84,14 @@ public class Simulation extends Application {
 			if (nextAction == null) {
 				System.out.println(LocalDateTime.now() + "  Fail! Restart simulation.");
 				attemptsNumber += 1;
-				robot = new Robot(2, 1, 0.2);
+				//robot = new Robot(2, 1, 0.2);
+				robot = randomlyInitializedRobot();
+				initState = new MazeRobotState(map.getRoom(robot.getXPos(), robot.getYPos()));
 				qLearningAgent = new QLearningAgent(initState, null, null);
 			} else {
 				nextAction.executeAction();
 				System.out.println(robot.getYPos());
-				MazeRobotState currentState = new MazeRobotState(map.getRooms().get(robot.getYPos()).get(robot.getXPos()));
+				MazeRobotState currentState = new MazeRobotState(map.getRoom(robot.getXPos(), robot.getYPos()));
 				System.out.println(currentState);
 				qLearningAgent.setCurrentState(currentState, new MazeRobotReward(new StateActionPair(currentState, nextAction)));
 			}
@@ -102,6 +104,19 @@ public class Simulation extends Application {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private Robot randomlyInitializedRobot() {
+		ArrayList<Room> possibleRooms = Copy.roomsDeepCopy(map.getRooms().values());
+		Collection<Room> roomsToRemove = new ArrayList<>();
+		for(Room room : possibleRooms) {
+			if(room.getRoomType() == Room.RoomType.OBJECTIVE) {
+				roomsToRemove.add(room);
+			}
+		}
+		possibleRooms.removeAll(roomsToRemove);
+		Room randomRoom = Random.selectRandomFrom(possibleRooms);
+		return new Robot(randomRoom.getXPos(), randomRoom.getYPos(), 0.2);
 	}
 	
 	public static int getAttemptsNumber() {

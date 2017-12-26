@@ -14,6 +14,10 @@ public class MazeRobotReward extends AbstractReward implements Reward {
 	@Override
 	public int getReward(StateActionPair stateActionPair) {
 		Room room = ((MazeRobotState) stateActionPair.getState()).getRoom();
+		if(stateActionPair.getState().getAvailableActions().size() == 1) {
+			//Dead End
+			return -1;
+		}
 		switch (room.getRoomType()) {
 		case OBJECTIVE:
 			return 1;
