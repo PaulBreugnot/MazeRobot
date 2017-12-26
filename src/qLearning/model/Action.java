@@ -11,6 +11,8 @@ public interface Action {
 		return null;
 	}
 	
+	void executeAction();
+	
 	Object getValue();
 	@Override
 	int hashCode();

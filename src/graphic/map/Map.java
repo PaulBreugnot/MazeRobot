@@ -7,7 +7,7 @@ public class Map {
 	private int Width;
 	private int Height;
 	
-	private ArrayList<Room> rooms;
+	private ArrayList<ArrayList<Room>> rooms;
 	
 	public Map(int Width, int Height) {
 		setWidth(Width);
@@ -21,7 +21,7 @@ public class Map {
 		this.Height = Height;
 	}
 	
-	public void setRooms(ArrayList<Room> rooms) {
+	public void setRooms(ArrayList<ArrayList<Room>> rooms) {
 		this.rooms = rooms;
 	}
 	
@@ -41,7 +41,7 @@ public class Map {
 		return Height * Room.getSize();
 	}
 	
-	public ArrayList<Room> getRooms(){
+	public ArrayList<ArrayList<Room>> getRooms(){
 		return rooms;
 	}
 }

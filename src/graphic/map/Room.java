@@ -47,7 +47,27 @@ public class Room {
 	public int getYPos() {
 		return YPos;
 	}
+	
+	public RoomType getRoomType() {
+		return roomType;
+	}
 
+	public boolean topDoor() {
+		return topDoor;
+	}
+	
+	public boolean bottomDoor() {
+		return bottomDoor;
+	}
+	
+	public boolean rightDoor() {
+		return rightDoor;
+	}
+	
+	public boolean leftDoor() {
+		return leftDoor;
+	}
+	
 	public AnchorPane graphicItem() {
 		AnchorPane roomPane = new AnchorPane();
 		Rectangle rectangle = new Rectangle(0, 0, RoomSize * GraphicWindow.getScale(),
@@ -69,7 +89,7 @@ public class Room {
 
 		roomPane.getChildren().add(rectangle);
 
-		if (topDoor) {
+		if (bottomDoor) {
 			Line line1 = new Line(0, 0, RoomSize * GraphicWindow.getScale() / 10, 0);
 			line1.setStrokeWidth(5);
 
@@ -83,7 +103,7 @@ public class Room {
 			roomPane.getChildren().add(line);
 		}
 
-		if (bottomDoor) {
+		if (topDoor) {
 			Line line1 = new Line(0, RoomSize * GraphicWindow.getScale(), RoomSize * GraphicWindow.getScale() / 10,
 					RoomSize * GraphicWindow.getScale());
 			line1.setStrokeWidth(5);
@@ -130,6 +150,51 @@ public class Room {
 		}
 
 		return roomPane;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + XPos;
+		result = prime * result + YPos;
+		result = prime * result + (bottomDoor ? 1231 : 1237);
+		result = prime * result + (leftDoor ? 1231 : 1237);
+		result = prime * result + (rightDoor ? 1231 : 1237);
+		result = prime * result + ((roomType == null) ? 0 : roomType.hashCode());
+		result = prime * result + (topDoor ? 1231 : 1237);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Room other = (Room) obj;
+		if (XPos != other.XPos)
+			return false;
+		if (YPos != other.YPos)
+			return false;
+		if (bottomDoor != other.bottomDoor)
+			return false;
+		if (leftDoor != other.leftDoor)
+			return false;
+		if (rightDoor != other.rightDoor)
+			return false;
+		if (roomType != other.roomType)
+			return false;
+		if (topDoor != other.topDoor)
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "Room [XPos=" + XPos + ", YPos=" + YPos + "]";
 	}
 
 }
