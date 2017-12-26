@@ -11,20 +11,25 @@ public class Room {
 	public enum RoomType {
 		NEUTRAL, OBJECTIVE, TRAP
 	};
-
+	
 	private RoomType roomType;
 	private static double RoomSize = 1.0;
 	private boolean topDoor;
 	private boolean bottomDoor;
 	private boolean leftDoor;
 	private boolean rightDoor;
-
-	public Room(boolean topDoor, boolean bottomDoor, boolean leftDoor, boolean rightDoor, RoomType roomType) {
+	private int XPos;
+	private int YPos;
+	
+	
+	public Room(boolean topDoor, boolean bottomDoor, boolean leftDoor, boolean rightDoor, RoomType roomType, int XPos, int YPos) {
 		this.topDoor = topDoor;
 		this.bottomDoor = bottomDoor;
 		this.leftDoor = leftDoor;
 		this.rightDoor = rightDoor;
 		this.roomType = roomType;
+		this.XPos = XPos;
+		this.YPos = YPos;
 	}
 
 	public static void setSize(double RoomSize) {
@@ -33,6 +38,14 @@ public class Room {
 
 	public static double getSize() {
 		return RoomSize;
+	}
+	
+	public int getXPos() {
+		return XPos;
+	}
+	
+	public int getYPos() {
+		return YPos;
 	}
 
 	public AnchorPane graphicItem() {

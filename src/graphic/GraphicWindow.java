@@ -36,6 +36,7 @@ public class GraphicWindow {
 		scene = new Scene(root);
 
 		VBox mainVBox = new VBox();
+		mainVBox.setSpacing(50);
 		mainVBox.setAlignment(Pos.CENTER);
 		AnchorPane.setTopAnchor(mainVBox, 10.0);
 		AnchorPane.setBottomAnchor(mainVBox, 10.0);
@@ -130,8 +131,12 @@ public class GraphicWindow {
 	}
 
 	private void setRooms(AnchorPane mapPane) {
-		Room room = new Room(false, true, false, true, Room.RoomType.TRAP);
-		mapPane.getChildren().add(room.graphicItem());
+		for(Room room : simulation.getMap().getRooms()) {
+			AnchorPane graphic = room.graphicItem();
+			AnchorPane.setTopAnchor(graphic, room.getYPos()*Room.getSize()*scale);
+			AnchorPane.setLeftAnchor(graphic, room.getXPos()*Room.getSize()*scale);
+			mapPane.getChildren().add(graphic);
+		}
 	}
 	
 	public static double getScale() {

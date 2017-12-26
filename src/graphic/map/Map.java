@@ -21,6 +21,10 @@ public class Map {
 		this.Height = Height;
 	}
 	
+	public void setRooms(ArrayList<Room> rooms) {
+		this.rooms = rooms;
+	}
+	
 	public int getWidth() {
 		return Width;
 	}
@@ -35,5 +39,9 @@ public class Map {
 	
 	public double getRealHeight() {
 		return Height * Room.getSize();
+	}
+	
+	public ArrayList<Room> getRooms(){
+		return rooms;
 	}
 }
