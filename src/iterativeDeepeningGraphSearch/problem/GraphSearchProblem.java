@@ -2,19 +2,22 @@ package iterativeDeepeningGraphSearch.problem;
 
 import java.util.Collection;
 
+import iterativeDeepeningGraphSearch.model.Node;
 import iterativeDeepeningGraphSearch.model.Problem;
 import qLearning.model.Action;
 import qLearning.model.State;
+import qLearning.problem.MazeRobotAction;
 import qLearning.problem.MazeRobotState;
 import robot.Simulation;
 
 public class GraphSearchProblem implements Problem {
 
 	private State initialState;
-		
+
 	public GraphSearchProblem(State initialState) {
 		this.initialState = initialState;
 	}
+
 	@Override
 	public State getInitialState() {
 		return initialState;
@@ -32,29 +35,78 @@ public class GraphSearchProblem implements Problem {
 
 	@Override
 	public State getNextState(State state, Action action) {
-		return action.executeAction();
+		//return action.executeAction();
+		switch (((MazeRobotAction) action).getValue()) {
+		case GO_UP :{
+			return new MazeRobotState(Simulation.getMap().getRoom(((MazeRobotState)state).getRoom().getXPos(), ((MazeRobotState)state).getRoom().getYPos()+1));
+		}
+		case GO_DOWN :{
+			return new MazeRobotState(Simulation.getMap().getRoom(((MazeRobotState)state).getRoom().getXPos(), ((MazeRobotState)state).getRoom().getYPos()-1));
+		}
+		case GO_RIGHT :{
+			return new MazeRobotState(Simulation.getMap().getRoom(((MazeRobotState)state).getRoom().getXPos()+1, ((MazeRobotState)state).getRoom().getYPos()));
+		}
+		case GO_LEFT :{
+			return new MazeRobotState(Simulation.getMap().getRoom(((MazeRobotState)state).getRoom().getXPos()-1, ((MazeRobotState)state).getRoom().getYPos()));
+		}
+		default :
+			return null;
+		}
 	}
 
 	@Override
 	public double getStepCost(Object start, Object action, Object dest) {
 		return 0;
 	}
+
 	@Override
-	public void checkState(State state) {
-		System.out.println("Relevant state?");
-		System.out.println(state.equals(new MazeRobotState(Simulation.getMap().getRoom(Simulation.getRobot().getXPos(), Simulation.getRobot().getYPos()))));
-		if(!state.equals(new MazeRobotState(Simulation.getMap().getRoom(Simulation.getRobot().getXPos(), Simulation.getRobot().getYPos())))) {
-			Simulation.getRobot().setXPos(((MazeRobotState) state).getRoom().getXPos());
-			Simulation.getRobot().setYPos(((MazeRobotState) state).getRoom().getYPos());
-			Simulation.getGraphicWindow().updateGraphicItems();
-			try {
-				Thread.sleep(4000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
+	public void checkState(Node lastCutoff, Node currentNode) {
+		MazeRobotState robotRealState = new MazeRobotState(
+				Simulation.getMap().getRoom(Simulation.getRobot().getXPos(), Simulation.getRobot().getYPos()));
+		/*System.out.println("Relevant state?");
+		System.out.println(currentNode.getState().equals(robotRealState));*/
+		if (!currentNode.getState().equals(robotRealState)) {
+			goBackwardToNode(currentNode, lastCutoff);
+		}
+		/*System.out.println("And now?");
+		robotRealState = new MazeRobotState(
+				Simulation.getMap().getRoom(Simulation.getRobot().getXPos(), Simulation.getRobot().getYPos()));
+		System.out.println(currentNode.getState().equals(robotRealState));*/
+	}
+
+	@Override
+	public void goBackwardToNode(Node currentAlgoNode, Node currentRobotNode) {
+		/*System.out.println("Good State? " + currentRobotNode.getState().equals(currentAlgoNode.getState()));
+		System.out.println("Parent available? " + !(currentRobotNode.getParent()==null));
+		System.out.println("Keep going? " + (!currentRobotNode.getState().equals(currentAlgoNode.getState()) && !(currentRobotNode.getParent()==null)));*/
+		while (!currentRobotNode.getState().equals(currentAlgoNode.getState()) && !(currentRobotNode.getParent()==null)) {
+			/*System.out.println("Objective State : " + currentAlgoNode.getState());
+			System.out.println("Current State : " + currentRobotNode.getState());*/
+			MazeRobotAction previousAction = (MazeRobotAction) currentRobotNode.getPreviousAction();
+			switch ((MazeRobotAction.Actions) previousAction.getValue()) {
+			case GO_UP: {
+				new MazeRobotAction(MazeRobotAction.Actions.GO_DOWN).executeAction();
+				currentRobotNode = currentRobotNode.getParent();
+				System.out.println("salut!");
+				break;
+			}
+			case GO_DOWN: {
+				new MazeRobotAction(MazeRobotAction.Actions.GO_UP).executeAction();
+				currentRobotNode = currentRobotNode.getParent();
+				break;
+			}
+			case GO_LEFT: {
+				new MazeRobotAction(MazeRobotAction.Actions.GO_RIGHT).executeAction();
+				currentRobotNode = currentRobotNode.getParent();
+				break;
+			}
+			case GO_RIGHT: {
+				new MazeRobotAction(MazeRobotAction.Actions.GO_LEFT).executeAction();
+				currentRobotNode = currentRobotNode.getParent();
+				break;
+			}
 			}
 		}
-		System.out.println("And now?");
-		System.out.println(state.equals(new MazeRobotState(Simulation.getMap().getRoom(Simulation.getRobot().getXPos(), Simulation.getRobot().getYPos()))));
 	}
 
 }

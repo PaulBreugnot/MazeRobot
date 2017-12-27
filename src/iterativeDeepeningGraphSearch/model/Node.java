@@ -1,18 +1,34 @@
 package iterativeDeepeningGraphSearch.model;
 
+import qLearning.model.Action;
 import qLearning.model.State;
 
 public class Node {
 	private State state;
+	private Node parent;
+	private Action previousAction;
 	
 	public Node(State state) {
 		this.state = state;
 	}
 	
+	public Node(State state, Node parent, Action previousAction) {
+		this.state = state;
+		this.parent = parent;
+		this.previousAction = previousAction;
+	}
+	
 	public State getState() {
 		return state;
 	}
-
+	
+	public Node getParent() {
+		return parent;
+	}
+	
+	public Action getPreviousAction() {
+		return previousAction;
+	}
 	@Override
 	public int hashCode() {
 		final int prime = 31;

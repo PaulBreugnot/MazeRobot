@@ -9,7 +9,8 @@ public class Solution {
 		this.node = node;
 	}
 	
-	public Solution(boolean failure, boolean cutoff) {
+	public Solution(Node node, boolean failure, boolean cutoff) {
+		this.node = node;
 		this.failure = failure;
 		this.cutoff = cutoff;
 	}

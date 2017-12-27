@@ -56,17 +56,17 @@ public class Simulation extends Application {
 		 rooms.add(new Room(false, true, true, true, Room.RoomType.NEUTRAL, 1, 2));
 		 rooms.add(new Room(false, true, true, true, Room.RoomType.NEUTRAL, 2, 2));
 		 rooms.add(new Room(false, true, true, true, Room.RoomType.NEUTRAL, 3, 2));
-		 rooms.add(new Room(false, true, true, false, Room.RoomType.NEUTRAL, 4, 2));
+		 rooms.add(new Room(false, true, true, false, Room.RoomType.OBJECTIVE, 4, 2));
 		 
 
-		setMap(new Map(5, 3));
-		map.addRooms(rooms);
-		/*Room initRoom = new Room(true, true, true, true, Room.RoomType.OBJECTIVE, 5, 5);
+		setMap(new Map(15, 15));
+		//map.addRooms(rooms);
+		Room initRoom = new Room(true, true, true, true, Room.RoomType.OBJECTIVE, 5, 5);
 		map.addRoom(initRoom);
-		map.randomlyGenerateMaze(initRoom);*/
+		map.randomlyGenerateMaze(initRoom);
 		
-		//robot = randomlyInitializedRobot();
-		robot = new Robot(0, 0, 0.2);
+		robot = randomlyInitializedRobot();
+		//robot = new Robot(0, 0, 0.2);
 		initState = new MazeRobotState(map.getRoom(robot.getXPos(), robot.getYPos()));
 		graphicWindow = new GraphicWindow(stage, this);
 
@@ -91,7 +91,14 @@ public class Simulation extends Application {
 
 	public void runSimulation() {
 		for (int i = 0; i < 30; i++) {
-			robot = new Robot(0, 0, 0.2);
+			//robot = new Robot(0, 0, 0.2);
+			robot = randomlyInitializedRobot();
+			Simulation.getGraphicWindow().updateGraphicItems();
+			try {
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			initState = new MazeRobotState(map.getRoom(robot.getXPos(), robot.getYPos()));
 			exploreWithIDGS(initState);
 		}
@@ -131,10 +138,10 @@ public class Simulation extends Application {
 	}
 
 	public void exploreWithIDGS(MazeRobotState initState) {
-		/*IterativeDeepeningSearch explorer = new IterativeDeepeningSearch();
-		explorer.solve(new GraphSearchProblem(initState), 5);*/
+		//IterativeDeepeningSearch explorer = new IterativeDeepeningSearch();
+		//explorer.solve(new GraphSearchProblem(initState), 0);
 		DepthLimitedSearch explorer = new DepthLimitedSearch();
-		explorer.solve(new GraphSearchProblem(initState), 2);
+		explorer.solve(new GraphSearchProblem(initState), Integer.MAX_VALUE);
 	}
 
 	public static int getAttemptsNumber() {

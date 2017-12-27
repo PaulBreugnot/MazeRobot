@@ -18,7 +18,7 @@ public class MazeRobotAction implements Action {
 	}
 
 	@Override
-	public Object getValue() {
+	public Actions getValue() {
 		return action;
 	}
 
@@ -65,13 +65,10 @@ public class MazeRobotAction implements Action {
 			break;
 		}
 		}
-		if(Simulation.getAttemptsNumber() < 30) {
-			QLearningAgent.refreshEpsilon(0.9);
-		}
 
 		Simulation.getGraphicWindow().updateGraphicItems();
 		try {
-			Thread.sleep(4000);
+			Thread.sleep(200);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -10,7 +10,7 @@ public class IterativeDeepeningSearch implements Search {
 
 	@Override
 	public Solution solve(Problem problem, int limit) {
-		for (int depth = 0; depth < Integer.MAX_VALUE; depth++) {
+		for (int depth = 1; depth < Integer.MAX_VALUE; depth++) {
 			DepthLimitedSearch solver = new DepthLimitedSearch();
 			Solution sol = solver.solve(problem, depth);
 			if (!sol.cutoff()) {
