@@ -11,7 +11,7 @@ public interface Action {
 		return null;
 	}
 	
-	void executeAction();
+	State executeAction();
 	
 	Object getValue();
 	@Override

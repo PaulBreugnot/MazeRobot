@@ -26,16 +26,17 @@ public class DepthLimitedSearch implements Search {
 			} else {
 				boolean cutoffOccurred = false;
 				for (Action action : node.getState().getAvailableActions()) {
+					problem.checkState(node.getState());
 					Node child = new Node(problem.getNextState(node.getState(), action));
-					if (!exploredNodes.contains(child)) {
-						exploredNodes.add(child);
+					//if (!exploredNodes.contains(child)) {
+					//	exploredNodes.add(child);
 						Solution sol = RecursiveDLS(child, problem, limit - 1);
 						if (sol.cutoff()) {
 							cutoffOccurred = true;
 						} else if (!sol.failure()) {
 							return new Solution(child);
 						}
-					}
+					//}
 				}
 				if (cutoffOccurred) {
 					return new Solution(false, true);

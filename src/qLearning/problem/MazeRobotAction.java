@@ -2,6 +2,7 @@ package qLearning.problem;
 
 import qLearning.QLearningAgent;
 import qLearning.model.Action;
+import qLearning.model.State;
 import robot.Simulation;
 
 public class MazeRobotAction implements Action {
@@ -44,7 +45,7 @@ public class MazeRobotAction implements Action {
 	}
 
 	@Override
-	public void executeAction() {
+	public State executeAction() {
 		System.out.println("Executed Action : " + action);
 		switch (action) {
 		case GO_UP :{
@@ -67,6 +68,14 @@ public class MazeRobotAction implements Action {
 		if(Simulation.getAttemptsNumber() < 30) {
 			QLearningAgent.refreshEpsilon(0.9);
 		}
+
+		Simulation.getGraphicWindow().updateGraphicItems();
+		try {
+			Thread.sleep(4000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		return new MazeRobotState(Simulation.getMap().getRoom(Simulation.getRobot().getXPos(), Simulation.getRobot().getYPos()));
 	}
 
 	@Override

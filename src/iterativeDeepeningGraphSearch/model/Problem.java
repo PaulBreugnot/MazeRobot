@@ -10,4 +10,5 @@ public interface Problem {
     public Collection<Action> getActions(State state);
     public State getNextState(State state, Action action);
     public double getStepCost(Object start, Object action, Object dest);
+    public void checkState(State state);
 }

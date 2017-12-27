@@ -2,8 +2,8 @@ package iterativeDeepeningGraphSearch.model;
 
 public class Solution {
 	private Node node;
-	private boolean failure;
-	private boolean cutoff;
+	private boolean failure = false;
+	private boolean cutoff = false;
 
 	public Solution(Node node) {
 		this.node = node;
