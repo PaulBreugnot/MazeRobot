@@ -153,6 +153,10 @@ public class QLearningAgent {
 			nextAction = (Action) Action.getRandomAction(availableActions);
 		}
 	}
+	
+	public static void refreshEpsilon(double epsilon) {
+		QLearningAgent.epsilon = epsilon;
+	}
 
 	public void setParameters(double alpha, double gamma, double epsilonThreshold) {
 		QLearningAgent.alpha = alpha;

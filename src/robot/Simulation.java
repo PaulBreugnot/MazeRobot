@@ -56,7 +56,7 @@ public class Simulation extends Application {
 
 		setMap(new Map(10, 10));
 		//map.addRooms(rooms);
-		Room initRoom = new Room(true, true, true, true, Room.RoomType.OBJECTIVE, 2, 2);
+		Room initRoom = new Room(true, true, true, true, Room.RoomType.OBJECTIVE, 5, 5);
 		map.addRoom(initRoom);
 		map.randomlyGenerateMaze(initRoom);
 		robot = randomlyInitializedRobot();

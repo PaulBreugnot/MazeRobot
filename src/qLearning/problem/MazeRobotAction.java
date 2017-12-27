@@ -1,5 +1,6 @@
 package qLearning.problem;
 
+import qLearning.QLearningAgent;
 import qLearning.model.Action;
 import robot.Simulation;
 
@@ -62,6 +63,9 @@ public class MazeRobotAction implements Action {
 			Simulation.getRobot().incrementXPos(-1);
 			break;
 		}
+		}
+		if(Simulation.getAttemptsNumber() < 30) {
+			QLearningAgent.refreshEpsilon(0.9);
 		}
 	}
 
