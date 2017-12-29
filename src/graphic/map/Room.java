@@ -1,6 +1,7 @@
 package graphic.map;
 
 import graphic.GraphicWindow;
+import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -165,6 +166,7 @@ public class Room {
 			roomPane.getChildren().add(line);
 		}
 
+		setQLabels(roomPane);
 		return roomPane;
 	}
 
@@ -213,4 +215,32 @@ public class Room {
 		return "Room [XPos=" + XPos + ", YPos=" + YPos + "]";
 	}
 
+	private void setQLabels(AnchorPane roomPane) {
+		double maxWidth = RoomSize * GraphicWindow.getScale() * 0.5;
+		double maxHeight = RoomSize * GraphicWindow.getScale() * 0.25;
+		Label UP = new Label("UP : ");
+		UP.setMaxWidth(maxWidth);
+		UP.setMaxHeight(maxHeight);
+		UP.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth/4) +"px");
+		AnchorPane.setLeftAnchor(UP, RoomSize * GraphicWindow.getScale() *0.05);
+		Label DOWN = new Label("DOWN : ");
+		DOWN.setMaxWidth(maxWidth);
+		DOWN.setMaxHeight(maxHeight);
+		DOWN.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth/4) +"px");
+		AnchorPane.setTopAnchor(DOWN, RoomSize * GraphicWindow.getScale() * 0.25);
+		AnchorPane.setLeftAnchor(DOWN, RoomSize * GraphicWindow.getScale() *0.05);
+		Label LEFT = new Label("LEFT : ");
+		LEFT.setMaxWidth(maxWidth);
+		LEFT.setMaxHeight(maxHeight);
+		LEFT.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth/4) +"px");
+		AnchorPane.setTopAnchor(LEFT, RoomSize * GraphicWindow.getScale() * 0.5);
+		AnchorPane.setLeftAnchor(LEFT, RoomSize * GraphicWindow.getScale() *0.05);
+		Label RIGHT = new Label("RIGHT : ");
+		RIGHT.setMaxWidth(maxWidth);
+		RIGHT.setMaxHeight(maxHeight);
+		RIGHT.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth/4) +"px");
+		AnchorPane.setTopAnchor(RIGHT, RoomSize * GraphicWindow.getScale() * 0.75);
+		AnchorPane.setLeftAnchor(RIGHT, RoomSize * GraphicWindow.getScale() *0.05);
+		roomPane.getChildren().addAll(UP, DOWN, LEFT, RIGHT);
+	}
 }
