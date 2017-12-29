@@ -8,7 +8,6 @@ import graphic.GraphicWindow;
 import graphic.map.Map;
 import graphic.map.Room;
 import iterativeDeepeningGraphSearch.core.DepthLimitedSearch;
-import iterativeDeepeningGraphSearch.core.IterativeDeepeningSearch;
 import iterativeDeepeningGraphSearch.problem.GraphSearchProblem;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -59,7 +58,7 @@ public class Simulation extends Application {
 		 rooms.add(new Room(false, true, true, false, Room.RoomType.OBJECTIVE, 4, 2));
 		 
 
-		setMap(new Map(15, 15));
+		setMap(new Map(10, 10));
 		//map.addRooms(rooms);
 		Room initRoom = new Room(true, true, true, true, Room.RoomType.OBJECTIVE, 5, 5);
 		map.addRoom(initRoom);
@@ -88,9 +87,13 @@ public class Simulation extends Application {
 	public static GraphicWindow getGraphicWindow() {
 		return graphicWindow;
 	}
+	
+	public static QLearningAgent getQLearningAgent() {
+		return qLearningAgent;
+	}
 
 	public void runSimulation() {
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 100; i++) {
 			//robot = new Robot(0, 0, 0.2);
 			Simulation.getGraphicWindow().updateGraphicItems();
 			try {
@@ -101,12 +104,14 @@ public class Simulation extends Application {
 			initState = new MazeRobotState(map.getRoom(robot.getXPos(), robot.getYPos()));
 			exploreWithIDGS(initState);
 			robot = randomlyInitializedRobot();
+			initState = new MazeRobotState(map.getRoom(robot.getXPos(), robot.getYPos()));
+			qLearningAgent = new QLearningAgent(initState, null, null);
 		}
 
 		while (true) {
 			Action nextAction = qLearningAgent.getAction();
 			if (nextAction == null) {
-				System.out.println(LocalDateTime.now() + "  Fail! Restart simulation.");
+				System.out.println(LocalDateTime.now() + "  End of try. Reinitialize...");
 				attemptsNumber += 1;
 				// robot = new Robot(2, 1, 0.2);
 				robot = randomlyInitializedRobot();

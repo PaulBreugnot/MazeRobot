@@ -5,6 +5,10 @@ import java.util.Collection;
 import java.util.HashSet;
 
 import qLearning.model.Action;
+import qLearning.model.State;
+import qLearning.model.StateActionPair;
+import qLearning.problem.MazeRobotReward;
+import robot.Simulation;
 import util.Random;
 import iterativeDeepeningGraphSearch.model.Node;
 import iterativeDeepeningGraphSearch.model.Problem;
@@ -22,6 +26,7 @@ public class DepthLimitedSearch implements Search {
 
 	public Solution RecursiveDLS(Node node, Problem problem, int limit) {
 		exploredNodes.add(node);
+		Simulation.getQLearningAgent().Learn();
 		if (problem.isGoal(node.getState())) {
 			return new Solution(node);
 		} else {
@@ -43,7 +48,10 @@ public class DepthLimitedSearch implements Search {
 						lastCutoff = node;
 					}
 					else {
-						action.executeAction();
+						Simulation.getQLearningAgent().Learn();
+						State currentState = action.executeAction();
+						Simulation.getQLearningAgent().setCurrentState(currentState,
+								new MazeRobotReward(new StateActionPair(currentState, action)));
 						Solution sol = RecursiveDLS(child, problem, limit - 1);
 						if (sol.cutoff()) {
 							cutoffOccurred = true;

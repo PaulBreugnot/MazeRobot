@@ -12,7 +12,7 @@ public class QLearningAgent {
 	static double alpha = 0.2;
 	static double gamma = 0.9;
 	static double epsilon = 1;
-	static double epsilonThreshold = 0.01;
+	static double epsilonThreshold = 0;
 
 	private State previousState;
 	private Action previousAction;
@@ -57,7 +57,7 @@ public class QLearningAgent {
 		return availableActions;
 	}
 
-	private void Learn() {
+	public void Learn() {
 		StateActionPair previousStateActionPair = new StateActionPair(previousState, previousAction);
 		if (currentState.isTerminal()) {
 			System.out.println("Final state, updating Q value.");

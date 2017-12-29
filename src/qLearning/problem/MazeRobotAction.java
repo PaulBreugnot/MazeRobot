@@ -1,6 +1,5 @@
 package qLearning.problem;
 
-import qLearning.QLearningAgent;
 import qLearning.model.Action;
 import qLearning.model.State;
 import robot.Simulation;
@@ -68,7 +67,7 @@ public class MazeRobotAction implements Action {
 
 		Simulation.getGraphicWindow().updateGraphicItems();
 		try {
-			Thread.sleep(200);
+			Thread.sleep(50);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
