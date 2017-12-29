@@ -1,9 +1,11 @@
 package iterativeDeepeningGraphSearch.core;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 
 import qLearning.model.Action;
+import util.Random;
 import iterativeDeepeningGraphSearch.model.Node;
 import iterativeDeepeningGraphSearch.model.Problem;
 import iterativeDeepeningGraphSearch.model.Solution;
@@ -27,7 +29,10 @@ public class DepthLimitedSearch implements Search {
 				return new Solution(node, false, true);
 			} else {
 				boolean cutoffOccurred = false;
-				for (Action action : node.getState().getAvailableActions()) {
+				ArrayList<Action> availableActions = node.getState().getAvailableActions();
+				while(availableActions.size()>0) {
+					Action action = Random.selectRandomActionFrom(availableActions);
+					availableActions.remove(action);
 					if(lastCutoff!=null) {
 					problem.checkState(lastCutoff, node);
 					}

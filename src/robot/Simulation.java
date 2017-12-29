@@ -92,7 +92,6 @@ public class Simulation extends Application {
 	public void runSimulation() {
 		for (int i = 0; i < 30; i++) {
 			//robot = new Robot(0, 0, 0.2);
-			robot = randomlyInitializedRobot();
 			Simulation.getGraphicWindow().updateGraphicItems();
 			try {
 				Thread.sleep(500);
@@ -101,6 +100,7 @@ public class Simulation extends Application {
 			}
 			initState = new MazeRobotState(map.getRoom(robot.getXPos(), robot.getYPos()));
 			exploreWithIDGS(initState);
+			robot = randomlyInitializedRobot();
 		}
 
 		while (true) {
@@ -133,7 +133,7 @@ public class Simulation extends Application {
 			}
 		}
 		possibleRooms.removeAll(roomsToRemove);
-		Room randomRoom = Random.selectRandomFrom(possibleRooms);
+		Room randomRoom = Random.selectRandomRoomFrom(possibleRooms);
 		return new Robot(randomRoom.getXPos(), randomRoom.getYPos(), 0.2);
 	}
 
