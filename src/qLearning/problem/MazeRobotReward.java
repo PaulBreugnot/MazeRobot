@@ -20,9 +20,9 @@ public class MazeRobotReward extends AbstractReward implements Reward {
 		}*/
 		switch (room.getRoomType()) {
 		case OBJECTIVE:
-			return 1;
+			return 1000;
 		case TRAP:
-			return -1;
+			return -10;
 		case NEUTRAL:
 			return 0;
 		default:

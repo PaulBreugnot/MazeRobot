@@ -15,6 +15,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import qLearning.problem.MazeRobotState;
 import robot.Simulation;
 
 public class GraphicWindow {
@@ -159,14 +160,21 @@ public class GraphicWindow {
 	public void updateGraphicItems() {
 		Platform.runLater(() -> updateLabels());
 		Platform.runLater(() -> updateRobotCoordinates());
+		Platform.runLater(() -> updateRoomQLabels());
 	}
 
-	public void updateLabels() {
+	private void updateLabels() {
 		AttemptsLabel.setText(Integer.toString(Simulation.getAttemptsNumber()));
 	}
 
-	public void updateRobotCoordinates() {
+	private void updateRobotCoordinates() {
 		robotCircle.setCenterX((Room.getSize() / 2) * scale + Simulation.getRobot().getXPos() * Room.getSize() * scale);
 		robotCircle.setCenterY((Room.getSize() / 2) * scale + Simulation.getRobot().getYPos() * Room.getSize() * scale);
+	}
+
+	private void updateRoomQLabels() {
+		if (Simulation.getQLearningAgent().getPreviousState() != null) {
+			((MazeRobotState) Simulation.getQLearningAgent().getPreviousState()).getRoom().updateQValue();
+		}
 	}
 }

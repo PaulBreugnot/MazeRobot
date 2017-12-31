@@ -6,7 +6,9 @@ import iterativeDeepeningGraphSearch.model.Node;
 import iterativeDeepeningGraphSearch.model.Problem;
 import qLearning.model.Action;
 import qLearning.model.State;
+import qLearning.model.StateActionPair;
 import qLearning.problem.MazeRobotAction;
+import qLearning.problem.MazeRobotReward;
 import qLearning.problem.MazeRobotState;
 import robot.Simulation;
 
@@ -83,25 +85,46 @@ public class GraphSearchProblem implements Problem {
 			/*System.out.println("Objective State : " + currentAlgoNode.getState());
 			System.out.println("Current State : " + currentRobotNode.getState());*/
 			MazeRobotAction previousAction = (MazeRobotAction) currentRobotNode.getPreviousAction();
+			System.out.println("Go backward.");
 			switch ((MazeRobotAction.Actions) previousAction.getValue()) {
 			case GO_UP: {
-				new MazeRobotAction(MazeRobotAction.Actions.GO_DOWN).executeAction();
+				Action action = new MazeRobotAction(MazeRobotAction.Actions.GO_DOWN);
+				Simulation.getQLearningAgent().setNextAction(action);
+				State currentState = action.executeAction();
+				Simulation.getQLearningAgent().setCurrentState(currentState,
+						new MazeRobotReward(new StateActionPair(currentState, action)));
+				Simulation.getQLearningAgent().Learn();
 				currentRobotNode = currentRobotNode.getParent();
 				System.out.println("salut!");
 				break;
 			}
 			case GO_DOWN: {
-				new MazeRobotAction(MazeRobotAction.Actions.GO_UP).executeAction();
+				Action action = new MazeRobotAction(MazeRobotAction.Actions.GO_UP);
+				Simulation.getQLearningAgent().setNextAction(action);
+				State currentState = action.executeAction();
+				Simulation.getQLearningAgent().setCurrentState(currentState,
+						new MazeRobotReward(new StateActionPair(currentState, action)));
+				Simulation.getQLearningAgent().Learn();
 				currentRobotNode = currentRobotNode.getParent();
 				break;
 			}
 			case GO_LEFT: {
-				new MazeRobotAction(MazeRobotAction.Actions.GO_RIGHT).executeAction();
+				Action action = new MazeRobotAction(MazeRobotAction.Actions.GO_RIGHT);
+				Simulation.getQLearningAgent().setNextAction(action);
+				State currentState = action.executeAction();
+				Simulation.getQLearningAgent().setCurrentState(currentState,
+						new MazeRobotReward(new StateActionPair(currentState, action)));
+				Simulation.getQLearningAgent().Learn();
 				currentRobotNode = currentRobotNode.getParent();
 				break;
 			}
 			case GO_RIGHT: {
-				new MazeRobotAction(MazeRobotAction.Actions.GO_LEFT).executeAction();
+				Action action = new MazeRobotAction(MazeRobotAction.Actions.GO_LEFT);
+				Simulation.getQLearningAgent().setNextAction(action);
+				State currentState = action.executeAction();
+				Simulation.getQLearningAgent().setCurrentState(currentState,
+						new MazeRobotReward(new StateActionPair(currentState, action)));
+				Simulation.getQLearningAgent().Learn();
 				currentRobotNode = currentRobotNode.getParent();
 				break;
 			}

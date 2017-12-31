@@ -6,13 +6,17 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import qLearning.QLearningAgent;
+import qLearning.model.StateActionPair;
+import qLearning.problem.MazeRobotAction;
+import qLearning.problem.MazeRobotState;
 
 public class Room {
 
 	public enum RoomType {
 		NEUTRAL, OBJECTIVE, TRAP
 	};
-	
+
 	private RoomType roomType;
 	private static double RoomSize = 1.0;
 	private boolean topDoor;
@@ -21,9 +25,13 @@ public class Room {
 	private boolean rightDoor;
 	private int XPos;
 	private int YPos;
-	
-	
-	public Room(boolean topDoor, boolean bottomDoor, boolean leftDoor, boolean rightDoor, RoomType roomType, int XPos, int YPos) {
+	private Label UPvalue;
+	private Label DOWNvalue;
+	private Label LEFTvalue;
+	private Label RIGHTvalue;
+
+	public Room(boolean topDoor, boolean bottomDoor, boolean leftDoor, boolean rightDoor, RoomType roomType, int XPos,
+			int YPos) {
 		this.topDoor = topDoor;
 		this.bottomDoor = bottomDoor;
 		this.leftDoor = leftDoor;
@@ -40,15 +48,15 @@ public class Room {
 	public static double getSize() {
 		return RoomSize;
 	}
-	
+
 	public int getXPos() {
 		return XPos;
 	}
-	
+
 	public int getYPos() {
 		return YPos;
 	}
-	
+
 	public RoomType getRoomType() {
 		return roomType;
 	}
@@ -56,35 +64,35 @@ public class Room {
 	public boolean topDoor() {
 		return topDoor;
 	}
-	
+
 	public boolean bottomDoor() {
 		return bottomDoor;
 	}
-	
+
 	public boolean rightDoor() {
 		return rightDoor;
 	}
-	
+
 	public boolean leftDoor() {
 		return leftDoor;
 	}
-	
+
 	public void setTopDoor(boolean topDoor) {
 		this.topDoor = topDoor;
 	}
-	
+
 	public void setBottomDoor(boolean bottomDoor) {
 		this.bottomDoor = bottomDoor;
 	}
-	
+
 	public void setLeftDoor(boolean leftDoor) {
 		this.leftDoor = leftDoor;
 	}
-	
+
 	public void setRightDoor(boolean rightDoor) {
 		this.rightDoor = rightDoor;
 	}
-	
+
 	public AnchorPane graphicItem() {
 		AnchorPane roomPane = new AnchorPane();
 		Rectangle rectangle = new Rectangle(0, 0, RoomSize * GraphicWindow.getScale(),
@@ -165,8 +173,9 @@ public class Room {
 			line.setStrokeWidth(5);
 			roomPane.getChildren().add(line);
 		}
-
-		setQLabels(roomPane);
+		if (roomType == RoomType.NEUTRAL) {
+			setQLabels(roomPane);
+		}
 		return roomPane;
 	}
 
@@ -221,26 +230,91 @@ public class Room {
 		Label UP = new Label("UP : ");
 		UP.setMaxWidth(maxWidth);
 		UP.setMaxHeight(maxHeight);
-		UP.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth/4) +"px");
-		AnchorPane.setLeftAnchor(UP, RoomSize * GraphicWindow.getScale() *0.05);
+		UP.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
+		AnchorPane.setLeftAnchor(UP, RoomSize * GraphicWindow.getScale() * 0.05);
 		Label DOWN = new Label("DOWN : ");
 		DOWN.setMaxWidth(maxWidth);
 		DOWN.setMaxHeight(maxHeight);
-		DOWN.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth/4) +"px");
+		DOWN.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
 		AnchorPane.setTopAnchor(DOWN, RoomSize * GraphicWindow.getScale() * 0.25);
-		AnchorPane.setLeftAnchor(DOWN, RoomSize * GraphicWindow.getScale() *0.05);
+		AnchorPane.setLeftAnchor(DOWN, RoomSize * GraphicWindow.getScale() * 0.05);
 		Label LEFT = new Label("LEFT : ");
 		LEFT.setMaxWidth(maxWidth);
 		LEFT.setMaxHeight(maxHeight);
-		LEFT.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth/4) +"px");
+		LEFT.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
 		AnchorPane.setTopAnchor(LEFT, RoomSize * GraphicWindow.getScale() * 0.5);
-		AnchorPane.setLeftAnchor(LEFT, RoomSize * GraphicWindow.getScale() *0.05);
+		AnchorPane.setLeftAnchor(LEFT, RoomSize * GraphicWindow.getScale() * 0.05);
 		Label RIGHT = new Label("RIGHT : ");
 		RIGHT.setMaxWidth(maxWidth);
 		RIGHT.setMaxHeight(maxHeight);
-		RIGHT.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth/4) +"px");
+		RIGHT.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
 		AnchorPane.setTopAnchor(RIGHT, RoomSize * GraphicWindow.getScale() * 0.75);
-		AnchorPane.setLeftAnchor(RIGHT, RoomSize * GraphicWindow.getScale() *0.05);
+		AnchorPane.setLeftAnchor(RIGHT, RoomSize * GraphicWindow.getScale() * 0.05);
 		roomPane.getChildren().addAll(UP, DOWN, LEFT, RIGHT);
+		setQValues(roomPane);
+	}
+
+	public void setQValues(AnchorPane roomPane) {
+		double maxWidth = RoomSize * GraphicWindow.getScale() * 0.49;
+		double maxHeight = RoomSize * GraphicWindow.getScale() * 0.25;
+		UPvalue = new Label("0.0");
+		AnchorPane.setLeftAnchor(UPvalue, RoomSize * GraphicWindow.getScale() * 0.51);
+		UPvalue.setMaxWidth(maxWidth);
+		UPvalue.setMaxHeight(maxHeight);
+		UPvalue.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
+
+		DOWNvalue = new Label("0.0");
+		AnchorPane.setTopAnchor(DOWNvalue, RoomSize * GraphicWindow.getScale() * 0.25);
+		AnchorPane.setLeftAnchor(DOWNvalue, RoomSize * GraphicWindow.getScale() * 0.51);
+		DOWNvalue.setMaxWidth(maxWidth);
+		DOWNvalue.setMaxHeight(maxHeight);
+		DOWNvalue.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
+
+		LEFTvalue = new Label("0.0");
+		AnchorPane.setTopAnchor(LEFTvalue, RoomSize * GraphicWindow.getScale() * 0.5);
+		AnchorPane.setLeftAnchor(LEFTvalue, RoomSize * GraphicWindow.getScale() * 0.51);
+		LEFTvalue.setMaxWidth(maxWidth);
+		LEFTvalue.setMaxHeight(maxHeight);
+		LEFTvalue.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
+
+		RIGHTvalue = new Label("0.0");
+		AnchorPane.setTopAnchor(RIGHTvalue, RoomSize * GraphicWindow.getScale() * 0.75);
+		AnchorPane.setLeftAnchor(RIGHTvalue, RoomSize * GraphicWindow.getScale() * 0.51);
+		RIGHTvalue.setMaxWidth(maxWidth);
+		RIGHTvalue.setMaxHeight(maxHeight);
+		RIGHTvalue.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
+		roomPane.getChildren().addAll(UPvalue, DOWNvalue, LEFTvalue, RIGHTvalue);
+	}
+
+	public void updateQValue() {
+		System.out.println("Updating Q Labels...");
+		Double value;
+		StateActionPair up = new StateActionPair(new MazeRobotState(this),
+				new MazeRobotAction(MazeRobotAction.Actions.GO_UP));
+		value = QLearningAgent.getQLearningTable().get(up);
+		if (value != null) {
+			UPvalue.setText(Double.toString(value));
+		}
+
+		StateActionPair down = new StateActionPair(new MazeRobotState(this),
+				new MazeRobotAction(MazeRobotAction.Actions.GO_DOWN));
+		value = QLearningAgent.getQLearningTable().get(down);
+		if (value != null) {
+			DOWNvalue.setText(Double.toString(value));
+		}
+
+		StateActionPair left = new StateActionPair(new MazeRobotState(this),
+				new MazeRobotAction(MazeRobotAction.Actions.GO_LEFT));
+		value = QLearningAgent.getQLearningTable().get(left);
+		if (value != null) {
+			LEFTvalue.setText(Double.toString(value));
+		}
+
+		StateActionPair right = new StateActionPair(new MazeRobotState(this),
+				new MazeRobotAction(MazeRobotAction.Actions.GO_RIGHT));
+		value = QLearningAgent.getQLearningTable().get(right);
+		if (value != null) {
+			RIGHTvalue.setText(Double.toString(value));
+		}
 	}
 }

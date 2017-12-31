@@ -67,7 +67,7 @@ public class MazeRobotAction implements Action {
 
 		Simulation.getGraphicWindow().updateGraphicItems();
 		try {
-			Thread.sleep(50);
+			Thread.sleep(Simulation.delay);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}

@@ -21,6 +21,8 @@ import util.Copy;
 import util.Random;
 
 public class Simulation extends Application {
+	public static int delay = 50;
+	public static final int explorationsCycles = 500;
 
 	private static Map map;
 	private static Robot robot;
@@ -58,9 +60,9 @@ public class Simulation extends Application {
 		 rooms.add(new Room(false, true, true, false, Room.RoomType.OBJECTIVE, 4, 2));
 		 
 
-		setMap(new Map(10, 10));
+		setMap(new Map(32, 32));
 		//map.addRooms(rooms);
-		Room initRoom = new Room(true, true, true, true, Room.RoomType.OBJECTIVE, 5, 5);
+		Room initRoom = new Room(true, true, true, true, Room.RoomType.OBJECTIVE, 16, 16);
 		map.addRoom(initRoom);
 		map.randomlyGenerateMaze(initRoom);
 		
@@ -93,24 +95,28 @@ public class Simulation extends Application {
 	}
 
 	public void runSimulation() {
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < explorationsCycles; i++) {
 			//robot = new Robot(0, 0, 0.2);
-			Simulation.getGraphicWindow().updateGraphicItems();
+			graphicWindow.updateGraphicItems();
 			try {
-				Thread.sleep(500);
+				Thread.sleep(2*delay);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 			initState = new MazeRobotState(map.getRoom(robot.getXPos(), robot.getYPos()));
 			exploreWithIDGS(initState);
+			
+			System.out.println(LocalDateTime.now() + "  End of try. Reinitialize...");
 			robot = randomlyInitializedRobot();
 			initState = new MazeRobotState(map.getRoom(robot.getXPos(), robot.getYPos()));
+			System.out.println("Init State : " + initState);
 			qLearningAgent = new QLearningAgent(initState, null, null);
 		}
-
+		QLearningAgent.refreshEpsilon(0.4);
 		while (true) {
 			Action nextAction = qLearningAgent.getAction();
 			if (nextAction == null) {
+				graphicWindow.updateGraphicItems();
 				System.out.println(LocalDateTime.now() + "  End of try. Reinitialize...");
 				attemptsNumber += 1;
 				// robot = new Robot(2, 1, 0.2);
@@ -119,13 +125,12 @@ public class Simulation extends Application {
 				qLearningAgent = new QLearningAgent(initState, null, null);
 			} else {
 				MazeRobotState currentState = (MazeRobotState) nextAction.executeAction();
-				System.out.println(robot.getYPos());
-				System.out.println(currentState);
+				//System.out.println(currentState);
 				qLearningAgent.setCurrentState(currentState,
 						new MazeRobotReward(new StateActionPair(currentState, nextAction)));
 			}
-			System.out.println("Robot XPos : " + robot.getXPos());
-			System.out.println("Robot YPos : " + robot.getYPos());
+			//System.out.println("Robot XPos : " + robot.getXPos());
+			//System.out.println("Robot YPos : " + robot.getYPos());
 		}
 	}
 

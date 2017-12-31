@@ -47,14 +47,30 @@ public class QLearningAgent {
 			this.previousReward = previousReward;
 		}
 	}
+	
+	public void setNextAction(Action nextAction) {
+		this.nextAction = nextAction;
+	}
 
 	public Action getAction() {
 		Learn();
 		return nextAction;
 	}
+	
+	public Action getPreviousAction() {
+		return previousAction;
+	}
+	
+	public State getPreviousState() {
+		return previousState;
+	}
 
 	public ArrayList<Action> getAvailableActions() {
 		return availableActions;
+	}
+	
+	public static Hashtable<StateActionPair, Double> getQLearningTable(){
+		return QLearningTable;
 	}
 
 	public void Learn() {
@@ -62,7 +78,8 @@ public class QLearningAgent {
 		if (currentState.isTerminal()) {
 			System.out.println("Final state, updating Q value.");
 			QLearningTable.put(previousStateActionPair, (double) previousReward.getValue());
-			System.out.println(QLearningTable.get(previousStateActionPair));
+			System.out.println("previousStateActionPair : " + previousStateActionPair);
+			System.out.println("newQValue : " + QLearningTable.get(previousStateActionPair));
 			nextAction = null;
 		} else {
 			availableActions = currentState.getAvailableActions();
@@ -88,7 +105,7 @@ public class QLearningAgent {
 				maxQValue(currentState);
 			}
 			double p = Math.random();
-			System.out.println("epsilon : " + epsilon);
+			//System.out.println("epsilon : " + epsilon);
 			if (p < epsilon) {
 				// Exploration
 				explore();
@@ -145,11 +162,11 @@ public class QLearningAgent {
 			}
 		}
 		if (actionsNotTriedYet.size() > 0) {
-			System.out.println("Exploring a risky unknomwn environment...");
+			//System.out.println("Exploring a risky unknomwn environment...");
 			nextAction = (Action) Action.getRandomAction(actionsNotTriedYet);
 			QLearningTable.put(new StateActionPair(currentState, nextAction), 0.0);
 		} else {
-			System.out.println("Random action!");
+			//System.out.println("Random action!");
 			nextAction = (Action) Action.getRandomAction(availableActions);
 		}
 	}

@@ -26,8 +26,9 @@ public class DepthLimitedSearch implements Search {
 
 	public Solution RecursiveDLS(Node node, Problem problem, int limit) {
 		exploredNodes.add(node);
-		Simulation.getQLearningAgent().Learn();
 		if (problem.isGoal(node.getState())) {
+			//Simulation.getQLearningAgent().Learn();
+			Simulation.getGraphicWindow().updateGraphicItems();
 			return new Solution(node);
 		} else {
 			if (limit == 0) {
@@ -43,15 +44,16 @@ public class DepthLimitedSearch implements Search {
 					}
 					Node child = new Node(problem.getNextState(node.getState(), action), node, action);
 					if(exploredNodes.contains(child)) {
-						System.out.println("AlreadyExplored!");
 						cutoffOccurred = true;
 						lastCutoff = node;
 					}
 					else {
-						Simulation.getQLearningAgent().Learn();
+						//Simulation.getQLearningAgent().Learn();
+						Simulation.getQLearningAgent().setNextAction(action);
 						State currentState = action.executeAction();
 						Simulation.getQLearningAgent().setCurrentState(currentState,
 								new MazeRobotReward(new StateActionPair(currentState, action)));
+						Simulation.getQLearningAgent().Learn();
 						Solution sol = RecursiveDLS(child, problem, limit - 1);
 						if (sol.cutoff()) {
 							cutoffOccurred = true;
