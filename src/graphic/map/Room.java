@@ -1,6 +1,6 @@
 package graphic.map;
 
-import graphic.GraphicWindow;
+import graphic.MapDisplay;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -95,8 +95,8 @@ public class Room {
 
 	public AnchorPane graphicItem() {
 		AnchorPane roomPane = new AnchorPane();
-		Rectangle rectangle = new Rectangle(0, 0, RoomSize * GraphicWindow.getScale(),
-				RoomSize * GraphicWindow.getScale());
+		Rectangle rectangle = new Rectangle(0, 0, RoomSize * MapDisplay.getScale(),
+				RoomSize * MapDisplay.getScale());
 		switch (roomType) {
 		case NEUTRAL: {
 			rectangle.setFill(Color.YELLOW);
@@ -115,61 +115,61 @@ public class Room {
 		roomPane.getChildren().add(rectangle);
 
 		if (bottomDoor) {
-			Line line1 = new Line(0, 0, RoomSize * GraphicWindow.getScale() / 10, 0);
+			Line line1 = new Line(0, 0, RoomSize * MapDisplay.getScale() / 10, 0);
 			line1.setStrokeWidth(5);
 
-			Line line4 = new Line(RoomSize * GraphicWindow.getScale() * 9 / 10, 0, RoomSize * GraphicWindow.getScale(),
+			Line line4 = new Line(RoomSize * MapDisplay.getScale() * 9 / 10, 0, RoomSize * MapDisplay.getScale(),
 					0);
 			line4.setStrokeWidth(5);
 			roomPane.getChildren().addAll(line1, line4);
 		} else {
-			Line line = new Line(0, 0, RoomSize * GraphicWindow.getScale(), 0);
+			Line line = new Line(0, 0, RoomSize * MapDisplay.getScale(), 0);
 			line.setStrokeWidth(5);
 			roomPane.getChildren().add(line);
 		}
 
 		if (topDoor) {
-			Line line1 = new Line(0, RoomSize * GraphicWindow.getScale(), RoomSize * GraphicWindow.getScale() / 10,
-					RoomSize * GraphicWindow.getScale());
+			Line line1 = new Line(0, RoomSize * MapDisplay.getScale(), RoomSize * MapDisplay.getScale() / 10,
+					RoomSize * MapDisplay.getScale());
 			line1.setStrokeWidth(5);
 
-			Line line4 = new Line(RoomSize * GraphicWindow.getScale() * 9 / 10, RoomSize * GraphicWindow.getScale(),
-					RoomSize * GraphicWindow.getScale(), RoomSize * GraphicWindow.getScale());
+			Line line4 = new Line(RoomSize * MapDisplay.getScale() * 9 / 10, RoomSize * MapDisplay.getScale(),
+					RoomSize * MapDisplay.getScale(), RoomSize * MapDisplay.getScale());
 			line4.setStrokeWidth(5);
 			roomPane.getChildren().addAll(line1, line4);
 		} else {
-			Line line = new Line(0, RoomSize * GraphicWindow.getScale(), RoomSize * GraphicWindow.getScale(),
-					RoomSize * GraphicWindow.getScale());
+			Line line = new Line(0, RoomSize * MapDisplay.getScale(), RoomSize * MapDisplay.getScale(),
+					RoomSize * MapDisplay.getScale());
 			line.setStrokeWidth(5);
 			roomPane.getChildren().add(line);
 		}
 
 		if (leftDoor) {
-			Line line1 = new Line(0, 0, 0, RoomSize * GraphicWindow.getScale() / 10);
+			Line line1 = new Line(0, 0, 0, RoomSize * MapDisplay.getScale() / 10);
 			line1.setStrokeWidth(5);
 
-			Line line4 = new Line(0, RoomSize * GraphicWindow.getScale() * 9 / 10, 0,
-					RoomSize * GraphicWindow.getScale());
+			Line line4 = new Line(0, RoomSize * MapDisplay.getScale() * 9 / 10, 0,
+					RoomSize * MapDisplay.getScale());
 			line4.setStrokeWidth(5);
 			roomPane.getChildren().addAll(line1, line4);
 		} else {
-			Line line = new Line(0, 0, 0, RoomSize * GraphicWindow.getScale());
+			Line line = new Line(0, 0, 0, RoomSize * MapDisplay.getScale());
 			line.setStrokeWidth(5);
 			roomPane.getChildren().add(line);
 		}
 
 		if (rightDoor) {
-			Line line1 = new Line(RoomSize * GraphicWindow.getScale(), 0, RoomSize * GraphicWindow.getScale(),
-					RoomSize * GraphicWindow.getScale() / 10);
+			Line line1 = new Line(RoomSize * MapDisplay.getScale(), 0, RoomSize * MapDisplay.getScale(),
+					RoomSize * MapDisplay.getScale() / 10);
 			line1.setStrokeWidth(5);
 
-			Line line4 = new Line(RoomSize * GraphicWindow.getScale(), RoomSize * GraphicWindow.getScale() * 9 / 10,
-					RoomSize * GraphicWindow.getScale(), RoomSize * GraphicWindow.getScale());
+			Line line4 = new Line(RoomSize * MapDisplay.getScale(), RoomSize * MapDisplay.getScale() * 9 / 10,
+					RoomSize * MapDisplay.getScale(), RoomSize * MapDisplay.getScale());
 			line4.setStrokeWidth(5);
 			roomPane.getChildren().addAll(line1, line4);
 		} else {
-			Line line = new Line(RoomSize * GraphicWindow.getScale(), 0, RoomSize * GraphicWindow.getScale(),
-					RoomSize * GraphicWindow.getScale());
+			Line line = new Line(RoomSize * MapDisplay.getScale(), 0, RoomSize * MapDisplay.getScale(),
+					RoomSize * MapDisplay.getScale());
 			line.setStrokeWidth(5);
 			roomPane.getChildren().add(line);
 		}
@@ -225,61 +225,61 @@ public class Room {
 	}
 
 	private void setQLabels(AnchorPane roomPane) {
-		double maxWidth = RoomSize * GraphicWindow.getScale() * 0.5;
-		double maxHeight = RoomSize * GraphicWindow.getScale() * 0.25;
+		double maxWidth = RoomSize * MapDisplay.getScale() * 0.5;
+		double maxHeight = RoomSize * MapDisplay.getScale() * 0.25;
 		Label UP = new Label("UP : ");
 		UP.setMaxWidth(maxWidth);
 		UP.setMaxHeight(maxHeight);
 		UP.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
-		AnchorPane.setLeftAnchor(UP, RoomSize * GraphicWindow.getScale() * 0.05);
+		AnchorPane.setLeftAnchor(UP, RoomSize * MapDisplay.getScale() * 0.05);
 		Label DOWN = new Label("DOWN : ");
 		DOWN.setMaxWidth(maxWidth);
 		DOWN.setMaxHeight(maxHeight);
 		DOWN.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
-		AnchorPane.setTopAnchor(DOWN, RoomSize * GraphicWindow.getScale() * 0.25);
-		AnchorPane.setLeftAnchor(DOWN, RoomSize * GraphicWindow.getScale() * 0.05);
+		AnchorPane.setTopAnchor(DOWN, RoomSize * MapDisplay.getScale() * 0.25);
+		AnchorPane.setLeftAnchor(DOWN, RoomSize * MapDisplay.getScale() * 0.05);
 		Label LEFT = new Label("LEFT : ");
 		LEFT.setMaxWidth(maxWidth);
 		LEFT.setMaxHeight(maxHeight);
 		LEFT.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
-		AnchorPane.setTopAnchor(LEFT, RoomSize * GraphicWindow.getScale() * 0.5);
-		AnchorPane.setLeftAnchor(LEFT, RoomSize * GraphicWindow.getScale() * 0.05);
+		AnchorPane.setTopAnchor(LEFT, RoomSize * MapDisplay.getScale() * 0.5);
+		AnchorPane.setLeftAnchor(LEFT, RoomSize * MapDisplay.getScale() * 0.05);
 		Label RIGHT = new Label("RIGHT : ");
 		RIGHT.setMaxWidth(maxWidth);
 		RIGHT.setMaxHeight(maxHeight);
 		RIGHT.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
-		AnchorPane.setTopAnchor(RIGHT, RoomSize * GraphicWindow.getScale() * 0.75);
-		AnchorPane.setLeftAnchor(RIGHT, RoomSize * GraphicWindow.getScale() * 0.05);
+		AnchorPane.setTopAnchor(RIGHT, RoomSize * MapDisplay.getScale() * 0.75);
+		AnchorPane.setLeftAnchor(RIGHT, RoomSize * MapDisplay.getScale() * 0.05);
 		roomPane.getChildren().addAll(UP, DOWN, LEFT, RIGHT);
 		setQValues(roomPane);
 	}
 
 	public void setQValues(AnchorPane roomPane) {
-		double maxWidth = RoomSize * GraphicWindow.getScale() * 0.49;
-		double maxHeight = RoomSize * GraphicWindow.getScale() * 0.25;
+		double maxWidth = RoomSize * MapDisplay.getScale() * 0.49;
+		double maxHeight = RoomSize * MapDisplay.getScale() * 0.25;
 		UPvalue = new Label("0.0");
-		AnchorPane.setLeftAnchor(UPvalue, RoomSize * GraphicWindow.getScale() * 0.51);
+		AnchorPane.setLeftAnchor(UPvalue, RoomSize * MapDisplay.getScale() * 0.51);
 		UPvalue.setMaxWidth(maxWidth);
 		UPvalue.setMaxHeight(maxHeight);
 		UPvalue.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
 
 		DOWNvalue = new Label("0.0");
-		AnchorPane.setTopAnchor(DOWNvalue, RoomSize * GraphicWindow.getScale() * 0.25);
-		AnchorPane.setLeftAnchor(DOWNvalue, RoomSize * GraphicWindow.getScale() * 0.51);
+		AnchorPane.setTopAnchor(DOWNvalue, RoomSize * MapDisplay.getScale() * 0.25);
+		AnchorPane.setLeftAnchor(DOWNvalue, RoomSize * MapDisplay.getScale() * 0.51);
 		DOWNvalue.setMaxWidth(maxWidth);
 		DOWNvalue.setMaxHeight(maxHeight);
 		DOWNvalue.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
 
 		LEFTvalue = new Label("0.0");
-		AnchorPane.setTopAnchor(LEFTvalue, RoomSize * GraphicWindow.getScale() * 0.5);
-		AnchorPane.setLeftAnchor(LEFTvalue, RoomSize * GraphicWindow.getScale() * 0.51);
+		AnchorPane.setTopAnchor(LEFTvalue, RoomSize * MapDisplay.getScale() * 0.5);
+		AnchorPane.setLeftAnchor(LEFTvalue, RoomSize * MapDisplay.getScale() * 0.51);
 		LEFTvalue.setMaxWidth(maxWidth);
 		LEFTvalue.setMaxHeight(maxHeight);
 		LEFTvalue.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");
 
 		RIGHTvalue = new Label("0.0");
-		AnchorPane.setTopAnchor(RIGHTvalue, RoomSize * GraphicWindow.getScale() * 0.75);
-		AnchorPane.setLeftAnchor(RIGHTvalue, RoomSize * GraphicWindow.getScale() * 0.51);
+		AnchorPane.setTopAnchor(RIGHTvalue, RoomSize * MapDisplay.getScale() * 0.75);
+		AnchorPane.setLeftAnchor(RIGHTvalue, RoomSize * MapDisplay.getScale() * 0.51);
 		RIGHTvalue.setMaxWidth(maxWidth);
 		RIGHTvalue.setMaxHeight(maxHeight);
 		RIGHTvalue.setStyle("-fx-font-size : " + (int) Math.floor(maxWidth / 4) + "px");

@@ -22,7 +22,7 @@ import util.Random;
 
 public class Simulation extends Application {
 	public static int delay = 50;
-	public static final int explorationsCycles = 500;
+	public static final int explorationsCycles = 200;
 
 	private static Map map;
 	private static Robot robot;
