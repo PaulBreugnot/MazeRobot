@@ -2,13 +2,9 @@ package graphic;
 
 import graphic.map.Room;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -21,10 +17,10 @@ import robot.Simulation;
 public class GraphicWindow {
 	private Stage stage;
 	private Scene scene;
+	private StatusBar statusBar;
 
 	private static double scale;
 
-	private Label AttemptsLabel;
 	private Circle robotCircle;
 
 	private Simulation simulation;
@@ -38,54 +34,24 @@ public class GraphicWindow {
 	private void setMainView() {
 		stage.setWidth(1000);
 		stage.setHeight(800);
-		AnchorPane root = new AnchorPane();
+		BorderPane root = new BorderPane();
 		scene = new Scene(root);
 
-		VBox mainVBox = new VBox();
-		mainVBox.setSpacing(50);
-		mainVBox.setAlignment(Pos.CENTER);
-		AnchorPane.setTopAnchor(mainVBox, 10.0);
+		//mainVBox.setSpacing(50);
+		//mainVBox.setAlignment(Pos.CENTER);
+		/*AnchorPane.setTopAnchor(mainVBox, 10.0);
 		AnchorPane.setBottomAnchor(mainVBox, 10.0);
 		AnchorPane.setLeftAnchor(mainVBox, 10.0);
 		AnchorPane.setRightAnchor(mainVBox, 10.0);
 
 		mainVBox.getChildren().addAll(TopPart(), MapView());
 
-		root.getChildren().add(mainVBox);
+		root.getChildren().add(mainVBox);*/
+		statusBar = new StatusBar(simulation);
+		root.setTop(statusBar);
 		stage.setScene(scene);
 		stage.show();
 
-	}
-
-	private HBox TopPart() {
-		HBox top = new HBox();
-		VBox.setVgrow(top, Priority.NEVER);
-		top.setMaxHeight(100);
-
-		AttemptsLabel = new Label(Integer.toString(Simulation.getAttemptsNumber()));
-		top.setAlignment(Pos.CENTER);
-		top.setSpacing(30);
-
-		top.getChildren().addAll(new Label("Attempts : "), AttemptsLabel, setRunButton());
-
-		return top;
-	}
-
-	private Button setRunButton() {
-		Button runButton = new Button("Run Simulation");
-
-		runButton.setOnAction(event -> {
-			Task<Void> task = new Task<Void>() {
-				@Override
-				public Void call() throws Exception {
-					simulation.runSimulation();
-					return null;
-				}
-			};
-			new Thread(task).start();
-		});
-
-		return runButton;
 	}
 
 	private AnchorPane MapView() {
@@ -158,13 +124,9 @@ public class GraphicWindow {
 	}
 
 	public void updateGraphicItems() {
-		Platform.runLater(() -> updateLabels());
+		Platform.runLater(() -> statusBar.updateLabels());
 		Platform.runLater(() -> updateRobotCoordinates());
 		Platform.runLater(() -> updateRoomQLabels());
-	}
-
-	private void updateLabels() {
-		AttemptsLabel.setText(Integer.toString(Simulation.getAttemptsNumber()));
 	}
 
 	private void updateRobotCoordinates() {
