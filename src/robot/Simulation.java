@@ -21,8 +21,8 @@ import util.Copy;
 import util.Random;
 
 public class Simulation extends Application {
-	public static int delay = 50;
-	public static final int explorationsCycles = 200;
+	public static int delay = 200;
+	public static final int explorationsCycles = 30;
 
 	private static Map map;
 	private static Robot robot;
@@ -60,9 +60,9 @@ public class Simulation extends Application {
 		 rooms.add(new Room(false, true, true, false, Room.RoomType.OBJECTIVE, 4, 2));
 		 
 
-		setMap(new Map(32, 32));
+		setMap(new Map(10, 10));
 		//map.addRooms(rooms);
-		Room initRoom = new Room(true, true, true, true, Room.RoomType.OBJECTIVE, 16, 16);
+		Room initRoom = new Room(true, true, true, true, Room.RoomType.OBJECTIVE, 5, 5);
 		map.addRoom(initRoom);
 		map.randomlyGenerateMaze(initRoom);
 		
@@ -107,12 +107,14 @@ public class Simulation extends Application {
 			exploreWithIDGS(initState);
 			
 			System.out.println(LocalDateTime.now() + "  End of try. Reinitialize...");
+			attemptsNumber+=1;
 			robot = randomlyInitializedRobot();
 			initState = new MazeRobotState(map.getRoom(robot.getXPos(), robot.getYPos()));
 			System.out.println("Init State : " + initState);
 			qLearningAgent = new QLearningAgent(initState, null, null);
 		}
 		QLearningAgent.refreshEpsilon(0.4);
+		attemptsNumber = 0;
 		while (true) {
 			Action nextAction = qLearningAgent.getAction();
 			if (nextAction == null) {
