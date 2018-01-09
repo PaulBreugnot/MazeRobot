@@ -46,11 +46,11 @@ public class GraphicWindow {
 
 	}
 
-	public void updateGraphicItems() {
+	/*public void updateGraphicItems() {
 		Platform.runLater(() -> statusBar.updateLabels());
 		Platform.runLater(() -> mapDisplay.updateRobotCoordinates());
 		Platform.runLater(() -> updateRoomQLabels());
-	}
+	}*/
 
 	private void updateRoomQLabels() {
 		if (Simulation.getQLearningAgent().getPreviousState() != null) {

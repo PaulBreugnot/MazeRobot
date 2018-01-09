@@ -64,12 +64,13 @@ public class MazeRobotAction implements Action {
 			break;
 		}
 		}
-
+		if(Simulation.displayON) {
 		Simulation.getGraphicWindow().updateGraphicItems();
 		try {
 			Thread.sleep(Simulation.delay);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
+		}
 		}
 		return new MazeRobotState(Simulation.getMap().getRoom(Simulation.getRobot().getXPos(), Simulation.getRobot().getYPos()));
 	}

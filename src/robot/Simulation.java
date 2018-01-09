@@ -21,8 +21,9 @@ import util.Copy;
 import util.Random;
 
 public class Simulation extends Application {
-	public static int delay = 200;
-	public static final int explorationsCycles = 30;
+	public static int delay = 50;
+	public static final int explorationsCycles = 300;
+	public static boolean displayON;
 
 	private static Map map;
 	private static Robot robot;
@@ -38,36 +39,35 @@ public class Simulation extends Application {
 
 	@Override
 	public void start(Stage stage) throws Exception {
-		
-		 ArrayList<Room> rooms = new ArrayList<>();
-		 
-		 rooms.add(new Room(true, false, false, true, Room.RoomType.NEUTRAL, 0, 0));
-		 rooms.add(new Room(true, false, true, true, Room.RoomType.NEUTRAL, 1, 0));
-		 rooms.add(new Room(true, false, true, true, Room.RoomType.NEUTRAL, 2, 0));
-		 rooms.add(new Room(true, false, true, true, Room.RoomType.NEUTRAL, 3, 0));
-		 rooms.add(new Room(true, false, true, false, Room.RoomType.NEUTRAL, 4, 0));
-		 
-		 rooms.add(new Room(true, true, false, true, Room.RoomType.NEUTRAL, 0, 1));
-		 rooms.add(new Room(true, true, true, true, Room.RoomType.NEUTRAL, 1, 1));
-		 rooms.add(new Room(true, true, true, true, Room.RoomType.NEUTRAL, 2, 1));
-		 rooms.add(new Room(true, true, true, true, Room.RoomType.NEUTRAL, 3, 1));
-		 rooms.add(new Room(true, true, true, false, Room.RoomType.NEUTRAL, 4, 1));
-		  
-		 rooms.add(new Room(false, true, false, true, Room.RoomType.NEUTRAL, 0, 2));
-		 rooms.add(new Room(false, true, true, true, Room.RoomType.NEUTRAL, 1, 2));
-		 rooms.add(new Room(false, true, true, true, Room.RoomType.NEUTRAL, 2, 2));
-		 rooms.add(new Room(false, true, true, true, Room.RoomType.NEUTRAL, 3, 2));
-		 rooms.add(new Room(false, true, true, false, Room.RoomType.OBJECTIVE, 4, 2));
-		 
 
-		setMap(new Map(10, 10));
-		//map.addRooms(rooms);
-		Room initRoom = new Room(true, true, true, true, Room.RoomType.OBJECTIVE, 5, 5);
+		ArrayList<Room> rooms = new ArrayList<>();
+
+		rooms.add(new Room(true, false, false, true, Room.RoomType.NEUTRAL, 0, 0));
+		rooms.add(new Room(true, false, true, true, Room.RoomType.NEUTRAL, 1, 0));
+		rooms.add(new Room(true, false, true, true, Room.RoomType.NEUTRAL, 2, 0));
+		rooms.add(new Room(true, false, true, true, Room.RoomType.NEUTRAL, 3, 0));
+		rooms.add(new Room(true, false, true, false, Room.RoomType.NEUTRAL, 4, 0));
+
+		rooms.add(new Room(true, true, false, true, Room.RoomType.NEUTRAL, 0, 1));
+		rooms.add(new Room(true, true, true, true, Room.RoomType.NEUTRAL, 1, 1));
+		rooms.add(new Room(true, true, true, true, Room.RoomType.NEUTRAL, 2, 1));
+		rooms.add(new Room(true, true, true, true, Room.RoomType.NEUTRAL, 3, 1));
+		rooms.add(new Room(true, true, true, false, Room.RoomType.NEUTRAL, 4, 1));
+
+		rooms.add(new Room(false, true, false, true, Room.RoomType.NEUTRAL, 0, 2));
+		rooms.add(new Room(false, true, true, true, Room.RoomType.NEUTRAL, 1, 2));
+		rooms.add(new Room(false, true, true, true, Room.RoomType.NEUTRAL, 2, 2));
+		rooms.add(new Room(false, true, true, true, Room.RoomType.NEUTRAL, 3, 2));
+		rooms.add(new Room(false, true, true, false, Room.RoomType.OBJECTIVE, 4, 2));
+
+		setMap(new Map(60, 60));
+		// map.addRooms(rooms);
+		Room initRoom = new Room(true, true, true, true, Room.RoomType.OBJECTIVE, 30, 30);
 		map.addRoom(initRoom);
 		map.randomlyGenerateMaze(initRoom);
-		
+
 		robot = randomlyInitializedRobot();
-		//robot = new Robot(0, 0, 0.2);
+		// robot = new Robot(0, 0, 0.2);
 		initState = new MazeRobotState(map.getRoom(robot.getXPos(), robot.getYPos()));
 		graphicWindow = new GraphicWindow(stage, this);
 
@@ -85,35 +85,39 @@ public class Simulation extends Application {
 	public static Robot getRobot() {
 		return robot;
 	}
-	
+
 	public static GraphicWindow getGraphicWindow() {
 		return graphicWindow;
 	}
-	
+
 	public static QLearningAgent getQLearningAgent() {
 		return qLearningAgent;
 	}
 
 	public void runSimulation() {
+		displayON = false;
 		for (int i = 0; i < explorationsCycles; i++) {
-			//robot = new Robot(0, 0, 0.2);
-			graphicWindow.updateGraphicItems();
+			// robot = new Robot(0, 0, 0.2);
+			if (displayON) {
+				graphicWindow.updateGraphicItems();
 			try {
-				Thread.sleep(2*delay);
+				Thread.sleep(2 * delay);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			}
 			initState = new MazeRobotState(map.getRoom(robot.getXPos(), robot.getYPos()));
 			exploreWithIDGS(initState);
-			
+
 			System.out.println(LocalDateTime.now() + "  End of try. Reinitialize...");
-			attemptsNumber+=1;
+			attemptsNumber += 1;
 			robot = randomlyInitializedRobot();
 			initState = new MazeRobotState(map.getRoom(robot.getXPos(), robot.getYPos()));
 			System.out.println("Init State : " + initState);
 			qLearningAgent = new QLearningAgent(initState, null, null);
 		}
 		QLearningAgent.refreshEpsilon(0.4);
+		displayON = true;
 		attemptsNumber = 0;
 		while (true) {
 			Action nextAction = qLearningAgent.getAction();
@@ -127,12 +131,12 @@ public class Simulation extends Application {
 				qLearningAgent = new QLearningAgent(initState, null, null);
 			} else {
 				MazeRobotState currentState = (MazeRobotState) nextAction.executeAction();
-				//System.out.println(currentState);
+				// System.out.println(currentState);
 				qLearningAgent.setCurrentState(currentState,
 						new MazeRobotReward(new StateActionPair(currentState, nextAction)));
 			}
-			//System.out.println("Robot XPos : " + robot.getXPos());
-			//System.out.println("Robot YPos : " + robot.getYPos());
+			// System.out.println("Robot XPos : " + robot.getXPos());
+			// System.out.println("Robot YPos : " + robot.getYPos());
 		}
 	}
 
@@ -150,8 +154,8 @@ public class Simulation extends Application {
 	}
 
 	public void exploreWithIDGS(MazeRobotState initState) {
-		//IterativeDeepeningSearch explorer = new IterativeDeepeningSearch();
-		//explorer.solve(new GraphSearchProblem(initState), 0);
+		// IterativeDeepeningSearch explorer = new IterativeDeepeningSearch();
+		// explorer.solve(new GraphSearchProblem(initState), 0);
 		DepthLimitedSearch explorer = new DepthLimitedSearch();
 		explorer.solve(new GraphSearchProblem(initState), Integer.MAX_VALUE);
 	}
